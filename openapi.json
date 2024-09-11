@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.3",
+
+  "info": {
+    "title": "blog.aogung.com API",
+    "description": "API untuk blog.aogung.com",
+    "version": "1.0",
+    "contact": { "name": "AgungSukaAFK", "email": "wismaagung23@gmail.com" }
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Endpoint untuk autentikasi user seperti login dan register"
+    },
+    { "name": "User", "description": "Endpoint untuk CRUD user" }
+  ],
+  "servers": [
+    {
+      "url": "https://api.server.test/v1",
+      "description": "Api Server untuk dev"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login user",
+        "responses": {
+          "200": {
+            "description": "Login success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}

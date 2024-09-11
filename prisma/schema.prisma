@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model testing {
+  value String @id @db.VarChar(50)
+}
+
+model users {
+  id        Int      @id @default(autoincrement())
+  username  String   @db.VarChar(50)
+  password  String   @db.VarChar(100)
+  image     String   @default("https://utfs.io/f/81d0cd8a-dd88-4cb0-ac24-7cf851d98f7e-1c.webp") @db.VarChar(150)
+  created   DateTime @default(now()) @db.Timestamp(0)
+  updated   DateTime @default(now()) @db.Timestamp(0)
+  bookmarks Json?
+  role      String   @default("member") @db.VarChar(20)
+}
