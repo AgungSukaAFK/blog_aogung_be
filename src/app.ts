@@ -1,11 +1,11 @@
 import express from "express";
 import cors from "cors";
 import cookieparser from "cookie-parser";
-import { userRouter } from "./src/routes/userRouter";
-import { authRouter } from "./src/routes/authRouter";
-import { notFoundMiddleware } from "./src/middlewares/notFound";
-import versionMiddleware from "./src/middlewares/versioning";
-import errorHandlerMiddleware from "./src/middlewares/errorHandler";
+import { userRouter } from "./routes/userRouter";
+import { authRouter } from "./routes/authRouter";
+import { notFoundMiddleware } from "./middlewares/notFound";
+import versionMiddleware from "./middlewares/versioning";
+import errorHandlerMiddleware from "./middlewares/errorHandler";
 
 const app = express();
 
