@@ -25,6 +25,7 @@ const login = async (req: Request, res: Response) => {
         res.cookie("access-token", token, {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 4, // 4 jam = usia token
+          sameSite: "none",
         });
 
         return res.status(200).json({
@@ -48,4 +49,20 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-export default { login };
+const logout = (req: Request, res: Response) => {
+  let token = req.cookies["access-token"];
+  if (token) {
+    res.clearCookie("access-token");
+    return res.status(200).json({
+      success: true,
+      message: "Logout Berhasil",
+    });
+  } else {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+};
+
+export default { login, logout };

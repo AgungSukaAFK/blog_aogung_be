@@ -5,4 +5,6 @@ const router = Router();
 
 router.post("/login", authController.login);
 
+router.get("/logout", authController.logout);
+
 export const authRouter = router;
