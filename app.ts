@@ -1,11 +1,11 @@
 import express from "express";
 import cors from "cors";
 import cookieparser from "cookie-parser";
-import { userRouter } from "./routes/userRouter";
-import { authRouter } from "./routes/authRouter";
-import { notFoundMiddleware } from "./middlewares/notFound";
-import versionMiddleware from "./middlewares/versioning";
-import errorHandlerMiddleware from "./middlewares/errorHandler";
+import { userRouter } from "./src/routes/userRouter";
+import { authRouter } from "./src/routes/authRouter";
+import { notFoundMiddleware } from "./src/middlewares/notFound";
+import versionMiddleware from "./src/middlewares/versioning";
+import errorHandlerMiddleware from "./src/middlewares/errorHandler";
 
 const app = express();
 
@@ -38,15 +38,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", async (req, res) => {
+app.get("/api", async (req, res) => {
   res.json({
     success: true,
     message: "Welcome to blog.aogung.com API, Beta version",
   });
 });
 
-app.use("/user", userRouter);
-app.use("/auth", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 
 app.use(notFoundMiddleware);
 
