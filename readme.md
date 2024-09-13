@@ -36,6 +36,11 @@ File hasil build akan ditempatkan di direktori `./build/`.
 
 Terakhir, coba jalankan hasil build dengan command `npm run start` atau bisa juga langsung `node build/app.js`.
 
+## Deploy
+
+Untuk deployment hanya perlu folder hasil build, package.json, dan skema prisma.  
+Disarankan menggunakan yarn untuk package manager.
+
 ## Penutup
 
 Jika menemukan bug, kendala, atau memiliki ide untuk berkontribusi, saya sangat terbuka dengan hal tersebut. Gunakan issue atau kontak saya secara langsung untuk berkomunikasi.
