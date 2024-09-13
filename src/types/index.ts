@@ -16,6 +16,7 @@ type userType = {
   created?: string;
   updated?: string;
   role?: string;
+  bookmarks?: string;
 };
 
 export { middlewareProps, handlerProps, userType };
