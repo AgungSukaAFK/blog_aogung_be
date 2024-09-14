@@ -52,7 +52,7 @@ app.use(notFoundMiddleware);
 
 app.use(errorHandlerMiddleware);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.NODE_ENV === "production" ? 0 : 3000;
 app.listen(PORT, () => {
-  console.log("Server started on port " + PORT);
+  console.log(`Server started on port ${PORT}`);
 });
