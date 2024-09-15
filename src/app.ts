@@ -6,6 +6,7 @@ import { authRouter } from "./routes/authRouter";
 import { notFoundMiddleware } from "./middlewares/notFound";
 import versionMiddleware from "./middlewares/versioning";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
+import { upload } from "./lib/multer";
 
 const app = express();
 
@@ -25,7 +26,7 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
@@ -38,15 +39,26 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/api", async (req, res) => {
+app.use("/public", express.static("public"));
+
+app.get("/", async (req, res) => {
   res.json({
     success: true,
     message: "Welcome to blog.aogung.com API, Beta version",
   });
 });
 
-app.use("/api/user", userRouter);
-app.use("/api/auth", authRouter);
+app.use("/user", userRouter);
+
+app.use("/auth", authRouter);
+
+app.post("/upload", upload.single("image"), (req, res) => {
+  try {
+    res.json({ message: "Image uploaded successfully!", file: req.file });
+  } catch (error) {
+    res.status(400).json({ error: "Error uploading file" });
+  }
+});
 
 app.use(notFoundMiddleware);
 

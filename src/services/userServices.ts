@@ -17,6 +17,9 @@ export default {
 
   //   Update
   async updateUser(data: userType, id: number) {
+    let date = new Date();
+    let timestamp = date.toISOString();
+    data.updated = timestamp;
     return await users.update({ where: { id }, data });
   },
 

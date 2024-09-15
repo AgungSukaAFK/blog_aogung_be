@@ -15,6 +15,8 @@ router.post("/create", userController.createUser);
 
 router.post("/update", authMiddleware, userController.updateUser);
 
+router.post("/cpw", authMiddleware, userController.changePassword);
+
 router.get("/whoami", authMiddleware, userController.getUserInfo);
 
 export const userRouter = router;

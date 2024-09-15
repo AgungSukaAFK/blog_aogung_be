@@ -50,7 +50,8 @@ const getUserInfo: handlerProps = async (req, res) => {
   if (token) {
     const decoced: any = await authServices.verifyToken(token);
     if (decoced.id) {
-      const user = await userServices.getUserById(decoced.id);
+      let user: any = await userServices.getUserById(decoced.id);
+      delete user?.password;
       res.status(200).json({
         success: true,
         message: "User information",
@@ -71,33 +72,40 @@ const getUserInfo: handlerProps = async (req, res) => {
 };
 
 const updateUser: handlerProps = async (req, res) => {
-  const { user, updatedUser }: { user: userType; updatedUser: userType } =
-    req.body;
-  if (user && updatedUser) {
-    if (user.id !== updatedUser.id) {
-      return res.status(400).json({
-        success: false,
-        message: "user id pengirim dan userid tujuan tidak sesuai",
-      });
-    }
+  const {
+    user: userRef,
+    updatedUser,
+  }: { user: userType; updatedUser: userType } = req.body;
+  if (userRef && updatedUser && userRef.id) {
+    const user = await userServices.getUserById(userRef.id);
     try {
       let newUserData: userType = {};
 
-      if (user.username !== updatedUser.username) {
+      console.log(`user:`);
+      console.log(user);
+      console.log(`updatedUser:`);
+      console.log(updatedUser);
+      if (
+        user?.username !== updatedUser?.username &&
+        updatedUser.username !== undefined
+      ) {
         newUserData.username = updatedUser.username;
       }
 
-      if (user.image !== updatedUser.image) {
+      if (
+        user?.image !== updatedUser?.image &&
+        updatedUser.image !== undefined
+      ) {
         newUserData.image = updatedUser.image;
       }
 
-      if (user.created !== updatedUser.created) {
-        newUserData.created = updatedUser.created;
+      if (user?.role !== updatedUser?.role && updatedUser.role !== undefined) {
+        if (user?.role === "admin") {
+          newUserData.role = updatedUser.role;
+        }
       }
 
-      if (user.role !== updatedUser.role) {
-        newUserData.role = updatedUser.role;
-      }
+      console.log(newUserData);
 
       if (Object.keys(newUserData).length === 0) {
         return res.status(400).json({
@@ -105,7 +113,7 @@ const updateUser: handlerProps = async (req, res) => {
           message: "tidak ada data yang diupdate",
         });
       }
-      if (user.id) {
+      if (user?.id) {
         userServices
           .updateUser(newUserData, user.id)
           .then((resolve) =>
@@ -138,4 +146,44 @@ const updateUser: handlerProps = async (req, res) => {
   }
 };
 
-export default { createUser, getUserInfo, updateUser };
+const changePassword: handlerProps = async (req, res) => {
+  const {
+    user: userRef,
+    oldPassword,
+    newPassword,
+  }: { user: userType; oldPassword: string; newPassword: string } = req.body;
+  if (userRef && userRef.id && oldPassword && newPassword) {
+    const user = await userServices.getUserById(userRef?.id);
+    if (user) {
+      if (await bcryptClient.compare(oldPassword, user.password)) {
+        const hashedPassword = await bcryptClient.hash(newPassword);
+        userServices
+          .updateUser({ password: hashedPassword }, user.id)
+          .then((resolve) => {
+            res.clearCookie("access-token");
+            res.status(200).json({
+              success: true,
+              message: "Password user diubah",
+            });
+          });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: "Password lama tidak sesuai",
+        });
+      }
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "User tidak ditemukan",
+      });
+    }
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Input tidak sesuai",
+    });
+  }
+};
+
+export default { createUser, getUserInfo, updateUser, changePassword };
